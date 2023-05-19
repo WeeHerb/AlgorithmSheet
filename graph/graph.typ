@@ -3,6 +3,55 @@
 = 图论
 == 欧拉回路
 == 拓扑排序
+
+正向拓扑,即寻找入度为0的点.
+
+有需要可以反向建图
+
+```cpp
+
+int n;
+const int maxn = 1e4 + 7;
+std::vector<int> g[maxn];
+
+int indeg[maxn];
+int outdeg[maxn];
+
+void clear(){
+  for(int i  = 0; i < maxn; i++){
+    g[i].clear();
+  }
+}
+void add_edge(int u, int v){
+  g[u].push_back(v);
+  indeg[v]++;
+  outdeg[u]++;
+}
+
+std::vector<int> topo_sorted;
+
+void topo_dfs(int u){
+  if(indeg[u] == 0){
+    topo_sorted.push_back(u);
+  }else return;
+  for(auto v: g[u]){
+    indeg[v]--;
+    if(indeg[v] == 0){
+      topo_dfs(v);
+    }
+  }
+}
+
+void topo_sort(){
+  // 有哪些节点需要从这里改改
+  for(int i = 0; i < n; i++){
+    if(indeg[i] == 0){
+      topo_dfs(i);
+    }
+  }
+}
+```
+
 == LCA 树上倍增
 #explain[
   有个人考场上现推 LCA 结果爆 0 了
