@@ -3,8 +3,8 @@
   title: "算法小抄",
   authors: (
     (name: "mslxl", email: "i@mslxl.com"),
-  ),
-  date: "March 28, 2023",
+    (name: "galong", email: "303987897@qq.com"),
+  )
 )
 
 #show raw.where(block: true): block.with(
@@ -19,13 +19,14 @@
 
 #set heading(numbering: "I.1.a.")
 
-#include "util/content.typ"
-#include "string/content.typ"
-#include "range/content.typ"
-#include "dp/content.typ"
+#include "util/util.typ"
+#include "string/string.typ"
+#include "range/range.typ"
+#include "dp/dp.typ"
 #include "graph/graph.typ"
 #include "math/math.typ"
 #include "game/game.typ"
-#include "poly/content.typ"
-#include "lib/content.typ"
-#include "other/conetnt.typ"
+#include "poly/poly.typ"
+#include "model/model.typ"
+#include "lib/lib.typ"
+#include "other/other.typ"
