@@ -8,7 +8,7 @@
 
 *非公平组合游戏 (Partizan Game)* 与公平组合游戏的区别在于在非公平组合游戏中，*游戏者在某一确定状态可以做出的决策集合与游戏者有关*。大部分的棋类游戏都不是公平组合游戏，如国际象棋、中国象棋、围棋、五子棋等（因为双方都不能使用对方的棋子）。
 
-*反常游戏 (Misère Game)* 按照传统的游戏规则进行游戏，但是其 *胜者为第一个无法行动的玩家*。以 Nim 游戏为例, Nim 游戏中取走最后一颗石子的为胜者，而反常 Nim 游戏中取走最后一刻石子的为败者。
+*反常游戏 (Misère Game)* 按照传统的游戏规则进行游戏，但是其 *胜者为第一个无法行动的玩家*。
 
 == 组合游戏分析法
 对于组合游戏，一般先找到 P 状态(Previous Position， 当前玩家会输的状态) 和 N 状态(Next Positoin，当前玩家会赢的状态)。分析时，一般从结束状态往回推。
@@ -55,3 +55,148 @@ $
 在正常游戏下
 - x 是 P 态当且仅当 $g(x) = 0$
 - x 是 N 态当且仅当 $g(x) > 0$
+
+求 SG 函数时，通常从终点出发，按照拓扑序逆序建立 SG 函数。
+
+=== 确定状态求 SG
+
+```cpp
+int k;
+const int maxk = 100 + 17;
+int S[maxk]; // 向前的转移状态
+
+const int maxh =   1e4 + 7;
+bool mex_vis[maxh]; // 仅用于求 mex
+int SG[maxh];
+
+int sg(int target){
+  std::memset(SG, 0, sizeof(SG));
+  for(int i = 1; i <= target; i++){
+     std::memset(mex_vis, false, sizeof(mex_vis));
+     
+
+     // mex
+     for(int j = 0; j < k; j++){
+       if(i - S[j] >= 0){
+         mex_vis[SG[i-S[j]]] = true;
+       }
+     }
+     
+     int mex = -1;
+     for(int j = 0; j < k; j++){
+       if(!mex_vis[j]){
+         mex = j;
+         break;
+       }
+     }
+
+     SG[i] = mex;
+  }
+  return SG[target];
+}
+```
+
+=== 从有向图游戏中求 SG
+
+#explain[
+  摘自题目: #link("https://acm.hdu.edu.cn/showproblem.php?pid=1524")[A Chess Game]
+]
+
+```cpp
+
+int n;
+const int maxn = 1e4 + 7;
+
+//------ 图定义 ----------
+// 应用反向建图,用于求 topo sort
+std::vector<int> rev_g[maxn];
+std::vector<int> g[maxn];
+
+int rev_indeg[maxn];
+int rev_outdeg[maxn];
+
+
+void clear() {
+  for (int i = 0; i < maxn; i++) {
+    rev_g[i].clear();
+    g[i].clear();
+  }
+  std::memset(rev_indeg, 0, sizeof(rev_indeg));
+  std::memset(rev_outdeg, 0, sizeof(rev_outdeg));
+}
+void add_edge(int u, int v) {
+  rev_g[v].push_back(u);
+  g[u].push_back(v);
+
+  rev_indeg[u]++;
+  rev_outdeg[v]++;
+}
+
+//------ SG ----------
+
+int SG[maxn];
+bool mex_vis[maxn];  // 仅用于 SG 函数中求 mex
+
+// 输入节点编号
+// 输出 SG 函数中的点编号
+int mex(int node) {
+  std::memset(mex_vis, false, sizeof(mex_vis));
+  for (auto v : g[node]) {  // 遍利能转移到的点
+    mex_vis[SG[v]] = true;
+  }
+  for (int i = 0; i < maxn; i++) {
+    if (!mex_vis[i]) return i;
+  }
+  return -1;
+}
+
+// 拓扑序
+void topo_dfs(int u) {
+  if (rev_indeg[u] == 0) {
+    SG[u] = mex(u);
+  } else
+    return;
+
+  for (auto v : rev_g[u]) {
+    rev_indeg[v]--;
+    if (rev_indeg[v] == 0) {
+      topo_dfs(v);
+    }
+  }
+}
+
+// 求 SG 函数
+void sg() {
+  std::memset(SG, 0, sizeof(SG));
+  for (int i = 0; i < n; i++) {
+    if (rev_indeg[i] == 0) {
+      // 无法行动的点 SG = 0
+      // 故必须向下多 dfs 一次
+      for (auto v : rev_g[i]) { 
+        rev_indeg[v]--;
+        if (rev_indeg[v] == 0) {
+          topo_dfs(v);
+        }
+      }
+    }
+  }
+}
+
+```
+
+== SG 定理: 组合游戏求和
+
+#explain[
+运用图游戏可以对求和进行描述。即给定 $n$ 个有向无环图$G_i(V_i, E_i)$,则图游戏的和$G(V,E)$满足
+- $V= V_1 times V_2 times V_3 times dots times V_n$
+- 结点 $x=(x_1, x_2, dots, x_n)$ 一步能到 $F(x) =  union.big^n_(i=1) {(x_1, x_2, dots, y_i, dots, x_n) | y_i in F_i(X_i)}$
+]
+
+每个游戏都有一个初始状态，每次当前玩家可以选择一个游戏，并按照游戏规则移动一次，如果轮到当前玩家时，所有的游戏都不能移动，则该玩家输（正常规则）。简单的游戏求和也能变的相当的困难。
+
+#alert[
+  游戏状态不能存在依赖关系
+]
+
+$G = G_1 + G_2 + dots + G_n$ 的 SG 函数为 $g(x)=g((x_1, x_2, dots, x_n)) = g_1(x_1) plus.circle g_2(x_2) plus.circle dots plus.circle g_n(x_n)$
+
