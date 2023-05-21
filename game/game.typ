@@ -58,7 +58,7 @@ $
 
 求 SG 函数时，通常从终点出发，按照拓扑序逆序建立 SG 函数。
 
-=== 确定状态求 SG
+=== 确定顺序求 SG
 
 ```cpp
 int k;
@@ -200,3 +200,23 @@ void sg() {
 
 $G = G_1 + G_2 + dots + G_n$ 的 SG 函数为 $g(x)=g((x_1, x_2, dots, x_n)) = g_1(x_1) plus.circle g_2(x_2) plus.circle dots plus.circle g_n(x_n)$
 
+
+#figure(
+  image("sg_consective.svg", width: 50%),
+  caption: [
+    连续状态转移
+  ]
+)
+若需要求大量 SG,且存在上图情况,不妨试试打表找规律
+#explain[
+  例如 #link("https://ac.nowcoder.com/acm/contest/34655/C")[Stone Game]
+]
+
+
+== 分裂游戏 (Take-and-Break Game)
+
+例如 Lasker's Nim
+
+n 堆石子中,每次玩家可以
+- 从一堆中取走若干个石子
+- 把一堆石子分成两个非空的堆

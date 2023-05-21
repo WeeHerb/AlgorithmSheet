@@ -116,7 +116,47 @@ int prefix(int i){
 长是真的长,好用是真的好用
 #alert[循环边界条件]
 
-#todo[]
+```cpp
+const int maxn = 5e5 + 5, INF = 0x3f3f3f3f;
+struct Node{
+    int l, r;
+    int maxv;
+}tr[maxn * 4];
+
+void pushup(int u){
+    tr[u].maxv = std::max(tr[u << 1].maxv, tr[u * 2 + 1].maxv);
+}
+
+void build(int u, int l, int r){
+    tr[u] = {l, r};
+    if (l == r){
+        tr[u].maxv = a[r];
+        return;
+    }
+    int mid = (l + r) / 2;
+    build(u * 2, l, mid), build(u * 2 + 1, mid + 1, r);
+    pushup(u);
+}
+
+void modify(int u, int x){
+    if (tr[u].l == tr[u].r){
+        tr[u].maxv -= n;
+        a[tr[u].r] -= n;
+        return;
+    }
+    int mid = (tr[u].l + tr[u].r) / 2;
+    if (x <= mid) modify(u << 1, x);
+    else modify(u << 1 | 1, x);
+    pushup(u);
+}
+
+int query(int u){
+    if (k + tr[u].maxv < n - 1) return -1;
+    if (tr[u].l == tr[u].r) return tr[u].r;
+    if (k + tr[u * 2].maxv >= n - 1) return query(u * 2);
+    return query(u* 2 + 1);
+}
+```
 
 === Lazy
 #todo[]
@@ -158,4 +198,10 @@ int prefix(int i){
 珂朵莉树是一种优美的暴力，他的优美是建立在区间的合并操作上，即区间赋值，那么如果构造出一组数据使得其几乎不含区间赋值操作，那珂朵莉树就会被轻易的卡掉
 
 所以珂朵莉树要求题目必须存在区间赋值操作，且数据有高度的随机性
+#todo[]
+
+== 单调栈
+
+#todo[]
+== 单调队列
 #todo[]

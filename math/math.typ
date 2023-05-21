@@ -241,3 +241,7 @@ std::ostream& operator<<(std::ostream& os, const Polynomial<T> & rhs){
   return os;
 }
 ```
+
+== 数列
+
+等比数列求和 $S_n = (a_1 - a_(n+1))/(1-q) = (a_1(1-q^n))/(1-q)$
