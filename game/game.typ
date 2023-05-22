@@ -41,8 +41,10 @@ $
 
 == 反常 Nim 游戏
 
-- 当 $ 1 <= i <= n, x_i = 1$，则 $n$ 为奇数数 P态，偶数是 N态。
-- 当至少有一个 $x_i > 1 $ 时，和 Nim 游戏相同
+
+- 当 $ forall i in S, x_i = 1$，则 $|S|$ 为奇数数 P态，偶数是 N态。
+- 当至少有一个 $exists i in S, x_i > 1 $ 时，和 Nim 游戏相同
+
 
 == Sprague-Grundy 函数
 
@@ -200,6 +202,21 @@ void sg() {
 
 $G = G_1 + G_2 + dots + G_n$ 的 SG 函数为 $g(x)=g((x_1, x_2, dots, x_n)) = g_1(x_1) plus.circle g_2(x_2) plus.circle dots plus.circle g_n(x_n)$
 
+#footnote[
+$plus.circle$ 的单位元为 $0$
+]
+
+
+
+#alert[
+  若 $exists i in S, g(i) = 0$, 应该综合 $|S|$ 的奇偶性和异或和进行分析
+
+  不能简单的求异或和
+
+  该情况常见于 *反常游戏*
+
+]
+
 
 #figure(
   image("sg_consective.svg", width: 50%),
@@ -212,6 +229,25 @@ $G = G_1 + G_2 + dots + G_n$ 的 SG 函数为 $g(x)=g((x_1, x_2, dots, x_n)) = g
   例如 #link("https://ac.nowcoder.com/acm/contest/34655/C")[Stone Game]
 ]
 
+=== Anti-SG 定理
+
+适用于反常游戏
+
+- 决策集合为空的游戏者赢
+- 其余规则与SG游戏相同
+
+=== SJ 定理
+
+适用于反常游戏
+
+对于Anti-SG游戏, 规定当局面中所有单一游戏的SG值为0时,游戏结束,则先手必胜当且仅当
+
+- $"SG"_("sum") = 0 and forall i in S, "SG"_i <= 1$
+- $"SG"_("sum") != 0 and exists i in S, "SG"_i > 1$
+
+#alert[
+此处的 SG 函数是指普通游戏的 SG 函数,而不是反常游戏的 SG
+]
 
 == 分裂游戏 (Take-and-Break Game)
 
@@ -220,3 +256,33 @@ $G = G_1 + G_2 + dots + G_n$ 的 SG 函数为 $g(x)=g((x_1, x_2, dots, x_n)) = g
 n 堆石子中,每次玩家可以
 - 从一堆中取走若干个石子
 - 把一堆石子分成两个非空的堆
+
+解答从 SG 和的角度考虑~#strike[打表找规律]:
+
+$
+g(diameter) &= 0 &quad &quad \
+
+g({1}) &= "mex"{g(diameter)} &= "mex"{0} &= 1 \
+
+g({1, 1}) &= g({1}) plus.circle g({1}) &quad  &= 0 \
+
+g({2}) &= "mex" {g(diameter), g({1, 1}), g({1})} &= "mex"{0, 1} &= 2\
+
+g({1, 2}) &= g({2}) plus.circle g({1}) &quad &=3\
+
+g({3}) &= "mex"{g(diameter), g({1, 2}), g({2}), g({1})} &= "mex"{0, 1, 2, 3} &= 4\
+
+&dots.v &dots.v &dots.v
+$
+
+最终获取的 SG 函数如下
+
+```python
+def sg(num):
+  bais = num % 5
+  if bais == 3:
+    return bais + 1
+  elif bais == 4:
+    return bais - 1
+  return bais
+```

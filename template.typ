@@ -37,6 +37,8 @@
 
   // Main body.
   set par(justify: true)
+  
+  set footnote(numbering: "*")
 
   body
 }
