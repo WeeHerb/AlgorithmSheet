@@ -161,10 +161,113 @@ int query(int u){
 === Lazy
 #todo[]
 == ZKW 线段树
-重点突出一个简单好抄不好理解
-#todo[]
-=== Lazy
-#todo[]
+#explain[
+  来自 #link("https://codeforces.com/blog/entry/18051")[Efficient and easy segment trees]
+]
+
+推荐数组使用大小: $2n$
+
+所有区间均指 $[l,r)$
+
+=== 区间修改,单点查询
+
+```cpp
+void modify(int l, int r, int value) {
+  for (l += n, r += n; l < r; l >>= 1, r >>= 1) {
+    if (l&1) t[l++] += value;
+    if (r&1) t[--r] += value;
+  }
+}
+
+int query(int p) {
+  int res = 0;
+  for (p += n; p > 0; p >>= 1) res += t[p];
+  return res;
+}
+```
+更新所有元素:
+
+```cpp
+void push() {
+  for (int i = 1; i < n; ++i) {
+    t[i<<1] += t[i];
+    t[i<<1|1] += t[i];
+    t[i] = 0;
+  }
+}
+```
+
+=== 单点修改,区间查询
+
+```cpp
+void modify(int p, const S& value) {
+  for (t[p += n] = value; p >>= 1; ) t[p] = combine(t[p<<1], t[p<<1|1]);
+}
+
+S query(int l, int r) {
+  S resl, resr;
+  for (l += n, r += n; l < r; l >>= 1, r >>= 1) {
+    if (l&1) resl = combine(resl, t[l++]);
+    if (r&1) resr = combine(t[--r], resr);
+  }
+  return combine(resl, resr);
+}
+```
+
+=== 懒传播
+```cpp
+int h = sizeof(int) * 8 - __builtin_clz(n);
+int d[N];  
+```
+
+区间增量,最大查值
+
+```cpp
+void apply(int p, int value) {
+  t[p] += value;
+  if (p < n) d[p] += value;
+}
+
+void build(int p) {
+  while (p > 1) p >>= 1, t[p] = max(t[p<<1], t[p<<1|1]) + d[p];
+}
+
+void push(int p) {
+  for (int s = h; s > 0; --s) {
+    int i = p >> s;
+    if (d[i] != 0) {
+      apply(i<<1, d[i]);
+      apply(i<<1|1, d[i]);
+      d[i] = 0;
+    }
+  }
+}
+
+void inc(int l, int r, int value) {
+  l += n, r += n;
+  int l0 = l, r0 = r;
+  for (; l < r; l >>= 1, r >>= 1) {
+    if (l&1) apply(l++, value);
+    if (r&1) apply(--r, value);
+  }
+  build(l0);
+  build(r0 - 1);
+}
+
+int query(int l, int r) {
+  l += n, r += n;
+  push(l);
+  push(r - 1);
+  int res = -2e9;
+  for (; l < r; l >>= 1, r >>= 1) {
+    if (l&1) res = max(res, t[l++]);
+    if (r&1) res = max(t[--r], res);
+  }
+  return res;
+}
+```
+
+
 == treap
 #todo[]
 == Splay
