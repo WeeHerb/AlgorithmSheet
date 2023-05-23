@@ -23,7 +23,10 @@
       fill: red,
       inset: 8pt,
       radius: 4pt,
-      [*小心!*\ #body],
+      align(
+        start,
+        [*注意 !*\ #body]
+      )
     )
   )
 }
