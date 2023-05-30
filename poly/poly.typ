@@ -4,8 +4,6 @@
 
 == 基础定义
 
-=== 常量: eps
-
 ```cpp
 const double eps = 0.00001;
 ```
