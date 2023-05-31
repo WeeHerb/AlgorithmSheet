@@ -298,3 +298,87 @@ def sg(num):
 常见于 multi-NIM
 
 若一个瓶子中有偶数个的话，那么这个瓶子是没有意义的。因为后手可以完全复制先手的操作，则该瓶子内减去偶数个巧克力豆还是偶数个，新增的两个瓶子内也都是增加了偶数个
+
+== Green Hackenbush
+
+#figure(
+  caption: "Green Hackenbush",
+  image("greenhackenbush.png")
+)
+
+#figure(
+  caption: "Green Colon 原则",
+  image("greencolon.png")
+)
+
+根据 Colon 原则, 当树枝在一个顶点上时，用一个非树枝的杆的长度来替代，相当于他们的n异或之和。
+
+Green Hackenbush 当分支交汇于某个顶点时，可以用一条长度为分支长度 NIM-和的杆来代替
+
+== Green Hackenbush on general rooted graphs
+
+#figure(
+  caption: "Green Hackenbush on general rooted graphs",
+  image(
+    width: 50%,
+    "greenhackenbush_loop.png"
+  )
+)
+
+Fusion 原则： 在不改变图上 SG-函数值的情况下，回路上的点可以进行合并。
+
+#figure(
+  caption: "Fusion",
+  image(
+    width: 50%,
+    "greenfusion.png"
+  )
+)
+
+首先，地上的两个点事实上可以合并成一个点；然后应用fusion principle，这个三角形等价于三个独立的自环；而每个自环又等价于一个大小为 
+ 的NIM堆，最终合并为一个大小为1的堆。
+
+更一般地，*奇数长度的回路都可以转换为一条边，偶数长度的回路转换为一个点。*
+
+#explain[
+ 来看 #link("https://www.cs.cmu.edu/afs/cs/academic/class/15859-f01/www/notes/comb.pdf")[https://www.cs.cmu.edu/afs/cs/academic/class/15859-f01/www/notes/comb.pdf.]
+]
+
+== Fibonacci NIM
+
+#image("fibs_nim.png")
+
+$n$ 是 P 态, 当且仅当 $n in {f(x) | x in RR}$
+
+$
+f(1) &= 1\
+f(2) &= 2\
+f(n) &= f(n-1) + f(n-2)
+$
+
+#image("fibs_nim_strategy.png")
+
+
+== Chomp
+
+#image("chomp.png")
+
+所有 $n,m$ 满足 $"max"(n, m) > 1$ 的矩形均为 $N$ 态. 即只要不是一开始只有一块毒饼干,一定是先手必胜
+
+
+#image("partial_chomp.png")
+
+== Wythoff
+
+#image("wythoff.png")
+
+#image("wythoff_sol.png")
+
+参考 Rayleigh 定理
+
+== 二分图博弈
+
+#image("bigraph.png")
+
+== NIM 积
+

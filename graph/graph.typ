@@ -117,7 +117,7 @@ int LCA(int x,int y){
 #todo[]
 === tarjan 缩点
 #todo[]
-= 二分图
+== 二分图
 
 二分图由两个集合组成，且两个集合内部没有边的图。
 
@@ -132,7 +132,7 @@ int LCA(int x,int y){
 / 交错路(alternating path): 始于非匹配点且由匹配边与非匹配边交错而成
 
 
-== 匈牙利算法
+== 二分图最大匹配(匈牙利算法)
 ```cpp
 #include <algorithm>
 #include <iostream>
