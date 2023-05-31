@@ -54,3 +54,25 @@ ll lcm(ll a, ll b){
   return (a * b)/gcd(a,b);
 }
 ```
+
+== 二分答案 lower_bound
+
+```cpp
+
+#include <algorithm>
+
+bool judge(int x){
+    // ...
+}
+
+struct dummy {
+    bool operator < (const dummy& rhs) const {
+        return judge(int(this));
+    }
+};
+
+int main(){
+    cout << (int)std::lower_bound((dummy*)100, (dummy*)200, dummy()) << endl;
+    return 0;
+}
+```
