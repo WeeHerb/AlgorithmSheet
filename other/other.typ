@@ -51,3 +51,53 @@ Linux
 ```shell-unix-generic
 setxkbmap -option caps:swapescape
 ```
+
+== 栈大小
+
+Windows:
+```sh
+g++ -Wl,--stack=268435456
+```
+
+Linux
+```sh
+$ ulimit -s 1024000
+```
+
+== sanitize
+```sh
+-g -fsanitize=address,undefined
+```
+
+== vim
+
+```vim
+set nu
+set ts=4
+set sw=4
+set mouse=a
+set cindent
+set hls
+color evening
+
+inoremap ( ()<left>
+inoremap { {}<left>
+inoremap [ []<left>
+
+map <f9> :!g++ -O2 -Wall -fsanitize=address % -o %<<cr>
+map <f8> :!time ./%<<cr>
+```
+
+f9编译，f8运行
+
+== cmake
+
+```
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17")
+file (GLOB files *.cpp */*.cpp)
+foreach (file ${files})
+    string(REGEX REPLACE ".+/(.+)/(.+)\\..*" "\\1-\\2" exe ${file})
+    add_executable (${exe} ${file})
+endforeach ()
+```
