@@ -1,24 +1,33 @@
 #import "template.typ": *
 #show: project.with(
-  title: "算法小抄",
+  title: "算法模板",
   authors: (
     (name: "mslxl", email: "i@mslxl.com"),
-    (name: "galong", email: "303987897@qq.com"),
   )
 )
+
+
+#set page(
+  margin: auto,
+  numbering: "I"
+)
+#counter(page).update(1)
+#outline(indent: true)
+
+#set page(
+  margin: auto,
+  numbering: "1"
+)
+#counter(page).update(1)
+#import "env.typ"
+
 
 #show raw.where(block: true): block.with(
   fill: luma(240),
   inset: 10pt,
   width: 100%
 )
-
-#outline(indent: true)
-#import "env.typ"
-
-
 #set heading(numbering: "I.1.a.")
-
 #include "util/util.typ"
 #include "string/string.typ"
 #include "range/range.typ"
