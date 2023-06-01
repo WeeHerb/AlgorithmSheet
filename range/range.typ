@@ -267,11 +267,6 @@ int query(int l, int r) {
 }
 ```
 
-
-== treap
-#todo[]
-== Splay
-#todo[]
 == 主席树
 #todo[]
 == 珂朵莉树

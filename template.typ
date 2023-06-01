@@ -5,7 +5,7 @@
   // Set the document's basic properties.
   set document(author: authors.map(a => a.name), title: title)
 
-  set text(font: "Source Han Sans SC", lang: "zh")
+  set text(font: "Source Han Sans HW SC", lang: "zh")
 
   show heading: it => [
     #pad(bottom: -10pt, [#smallcaps(it.body)])

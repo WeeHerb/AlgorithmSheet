@@ -1,6 +1,7 @@
 #import "template.typ": *
 #show: project.with(
   title: "算法模板",
+  date: include("build_time.txt"),
   authors: (
     (name: "mslxl", email: "i@mslxl.com"),
   )

@@ -5,20 +5,25 @@ on:
 
 jobs:
   build:
-    name: Build sheet.pdf
+    name: Build Sheet
     runs-on: ubuntu-latest
 
     steps:
+      - name: Install CNS11643 fonts
+        uses: RisingInIris2017/cjk-fonts-action@v1
+
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Install CNS11643 fonts
-        uses: RisingInIris2017/cjk-fonts-action@v1
+      - name: Update build time
+        run: date > build_time.txt
         
       - name: Typst
         uses: lvignoli/typst-action@main
         with:
           source_file: index.typ
+          font-dir: /usr/share/fonts
+
       - name: Rename
         run: |
           mv index.pdf sheet.pdf
