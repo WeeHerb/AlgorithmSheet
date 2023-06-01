@@ -380,5 +380,22 @@ $
 
 #image("bigraph.png")
 
+== Coin Turning Game
+#image("coin_turning_game.png")
+
+#image("coin_turning_game_sol.png")
+
 == NIM 积
+
+$
+x times.circle y = "mex"_(0 <= i < x, 0 <= j < y){(i times.circle j) plus.circle (i times.circle x) plus.circle (j times.circle y)}
+$
+
+- $0 times.circle x = 0$
+- $1 times.circle x = x$
+- $x times.circle y = y times.circle x$
+- $(x times.circle y) times.circle z = x times.circle (y times.circle z)$
+- $x times.circle (y plus.circle z) = (x times.circle y) plus.circle (x times.circle z)$
+
+即 $0$ 为零元, $1$ 为单位元. 满足交换律, 结合律, 对 $plus.circle$ 分配律
 
