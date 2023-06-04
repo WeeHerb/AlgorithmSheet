@@ -387,15 +387,70 @@ $
 
 == NIM 积
 
+#image("nim-prod-game.png")
+
+#image("tartan.png")
+
 $
-x times.circle y = "mex"_(0 <= i < x, 0 <= j < y){(i times.circle j) plus.circle (i times.circle x) plus.circle (j times.circle y)}
+x times.circle y := "mex"_(0 <= i < x, 0 <= j < y){(i times.circle j) plus.circle (i times.circle x) plus.circle (j times.circle y)}
 $
 
-- $0 times.circle x = 0$
-- $1 times.circle x = x$
-- $x times.circle y = y times.circle x$
-- $(x times.circle y) times.circle z = x times.circle (y times.circle z)$
-- $x times.circle (y plus.circle z) = (x times.circle y) plus.circle (x times.circle z)$
+/ 零元: $0 times.circle x = 0$
+/ 么元: $1 times.circle x = x$
+/ 逆元: $forall x in NN. exists y in NN. x times.circle y = 1$
+/ 交换律: $x times.circle y = y times.circle x$
+/ 结合律: $(x times.circle y) times.circle z = x times.circle (y times.circle z)$
+/ 分配律: $x times.circle (y plus.circle z) = (x times.circle y) plus.circle (x times.circle z)$
 
-即 $0$ 为零元, $1$ 为单位元. 满足交换律, 结合律, 对 $plus.circle$ 分配律
 
+#align(center)[
+ $(NN, plus.circle, times.circle)$ 是一个域
+]
+
+计算方式:
+
+定义 Fermat 2-power: $F_n = 2^(2^n)$, 则存在以下规律
+
+- $F_n times.circle F_n = 3/2 F_n$
+- 设 $k in NN$ 满足 $F_k > a$, 则 $a times.circle F_k = a times F_k$
+
+即可得到单次 $O(log^2 n)$ 的分治
+- 若 $min(a, b) <= 1$, 返回 $a times b$
+- 若 $max(a, b) <= 2^8$, 且曾经计算过 $a times.circle b$, 则返回记忆的值
+- 若 $k in NN$ 是满足 $F_k > max(a, b)$ 的最小值, $a_0, b_0$ 为 $a, b$ 较低的 $F_(k-1)$ 位, $a_1, b_1$ 为较高的 $F_(k-1)$ 位. (即 $F_(k-1) > a_0, b_0, a_1, b_1$) 则 
+$
+a times.circle b &= a_0 times.circle b_0 plus.circle 2^(2^(k-1)) times.circle (a_1 times.circle b_0 plus.circle a_0 times.circle b_1) plus.circle (2^(2^(k-1)) plus.circle 2^(2^(k-1)-1)) times.circle a_1 times.circle b_1 \
+&= a_0 times.circle b_0 plus.circle 2^(2^(k-1)) times ((a_0 plus.circle a_1) times.circle (b_0 plus.circle b_1) plus.circle a_0 times.circle b_0) plus.circle 2^(2^(k-1)-1) times.circle a_1 times.circle b_1
+
+$
+
+```cpp
+ull nim[256][256]; // 记忆化
+ull f(ull x,ull y,int len=32) {
+  if(x==0||y==0) return 0;
+  if(x==1||y==1) return x*y;
+
+  if(len<=4 && nim[x][y]) return nim[x][y];
+  ull xa = x>>len,
+    xb = x^(xa<<len),
+    ya=y>>len,
+    yb=y^(ya<<len);
+  ull a = f(xb, yb, len>>1),
+    b = f(xa^xb, ya^yb, len>>1),
+    c=f(xa, ya, len>>1),
+    d=f(c, 1ull<<len-1, len>>1);
+  ull re = ((b^a)<<len)^a^d;
+  if(len<=4)
+    nim[x][y]=re;
+  return re;
+}
+```
+
+#image("nim_prod_inv.png")
+
+
+== Turning Corners
+
+#image("turning_corners.png")
+
+$ "sg"(x, y) = "sg"(x) times.circle "sg"(y) $
