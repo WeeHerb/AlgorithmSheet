@@ -76,3 +76,18 @@ int main(){
     return 0;
 }
 ```
+
+== 三分
+
+```cpp
+while(std::fabs(r - l) >= eps){
+  ld mid = l + (r - l) / 2;
+  if(calc(mid-eps) > calc(mid + eps)){
+    r = mid;
+  }else{
+    l = mid;
+  }
+}
+
+std::cout << std::fixed << std::setprecision(7) << l;
+```
