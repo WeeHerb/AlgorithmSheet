@@ -43,3 +43,18 @@
     ]
   )
 }
+
+#let label_page(label_name, show_content: true) = [
+  #locate(loc => 
+  {
+    let target = label(label_name)
+    let target_elem = query(target, loc).at(0)
+    link(target)[
+      #target_elem.location().position().page
+      页
+      #if show_content [
+        #target_elem.body
+      ]
+    ]
+  })
+]

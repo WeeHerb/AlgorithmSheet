@@ -12,16 +12,15 @@
   margin: auto,
   numbering: "I"
 )
-#counter(page).update(1)
+// #counter(page).update(1)
 #outline(indent: true)
 
 #set page(
   margin: auto,
   numbering: "1"
 )
-#counter(page).update(1)
+// #counter(page).update(1)
 #import "env.typ"
-
 
 #show raw.where(block: true): block.with(
   fill: luma(240),
