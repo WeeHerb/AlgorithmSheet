@@ -1,7 +1,7 @@
 ALL: sheet.pdf
 
 sheet.pdf: clean
-	date > build_time.txt
+	date +"%Y-%m-%d %H:%M" > build_time.txt
 	typst compile index.typ sheet.pdf
 
 dev: sheet.pdf

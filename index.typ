@@ -4,6 +4,7 @@
   date: include("build_time.txt"),
   authors: (
     (name: "mslxl", email: "i@mslxl.com"),
+    (name: "galong",email: "g.along@aol.com"),
   )
 )
 
