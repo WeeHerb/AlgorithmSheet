@@ -269,8 +269,9 @@ int query(int l, int r) {
 
 == 主席树
 #todo[]
-== 珂朵莉树
+== 珂朵莉树(ODT)
 *不适用于 ACM 赛制*
+*极容易被卡*
 #explain[
   #table(
     columns: (1fr, 1fr),
@@ -290,16 +291,72 @@ int query(int l, int r) {
     ]
   )
 
-  该结构首次出现在 #link("https://codeforces.com/problemset/problem/896/C")[896C]。在具有区间赋值操作，区间统计操作，以及最好保证数据随机的情况下在时空复杂度上把线段树 *吊起来打*。#strike[也可以在走投无路时骗分]
+  该结构首次出现在 #link("https://codeforces.com/problemset/problem/896/C")[CF896C] 的题解中。在具有区间赋值操作，区间统计操作，以及最好保证数据随机的情况下在时空复杂度上把线段树 *吊起来打*。#strike[也可以在走投无路时骗分]
 ]
 
 珂朵莉树是一种优美的暴力，他的优美是建立在区间的合并操作上，即区间赋值，那么如果构造出一组数据使得其几乎不含区间赋值操作，那珂朵莉树就会被轻易的卡掉
 
 所以珂朵莉树要求题目必须存在区间赋值操作，且数据有高度的随机性
-#todo[]
 
-== 单调栈
+```cpp
+struct node {
+    ll l, r;
+    // mutable使得当整个结构体为const时，标为mutable的成员仍可变（因为可能有区间加等操作）
+    mutable ll v;
+    node(ll l, ll r, ll v) : l(l), r(r), v(v) {} 
+    bool operator<(const node &o) const { 
+      return l < o.l;
+    }
+};
 
-#todo[]
-== 单调队列
-#todo[]
+std::set<node> tree;
+
+std::set<node>::iterato split(ll pos){
+    auto it = tree.lower_bound(node(pos, 0, 0)); // 寻找左端点大于等于pos的第一个节点
+    if (it != tree.end() && it->l == pos) 
+        return it; // 如果已经存在以pos为左端点的节点，直接返回
+    it--; // 否则往前数一个节点
+    ll l = it->l, r = it->r, v = it->v;
+    tree.erase(it); // 删除该节点
+    tree.insert(node(l, pos - 1, v)); // 插入<l,pos-1,v>和<pos,r,v>
+    return tree.insert(node(pos, r, v)).first; // 返回以pos开头的那个节点的迭代器
+                                               // insert默认返回值是一个pair，第一个成员是我们要的
+}
+
+// 区间赋值
+void assign(ll l, ll r, ll v){
+    auto end = split(r + 1), begin = split(l); // 顺序不能颠倒，否则可能RE
+    tree.erase(begin, end); // 清除一系列节点
+    tree.insert(node(l, r, v)); // 插入新的节点
+}
+
+// 区间加
+void add(ll l, ll r, ll v){
+    auto end = split(r + 1);
+    for (auto it = split(l); it != end; it++)
+        it->v += v;
+}
+// 区间 k 大值
+ll kth(ll l, ll r, ll k){
+    auto end = split(r + 1);
+    vector<pair<ll, ll>> v; // 这个pair里存节点的值和区间长度
+    for (auto it = split(l); it != end; it++)
+        v.push_back(make_pair(it->v, it->r - it->l + 1));
+    sort(v.begin(), v.end()); // 直接按节点的值的大小排下序
+    for (int i = 0; i < v.size(); i++) // 然后挨个丢出来，直到丢出k个元素为止
+    {
+        k -= v[i].second;
+        if (k <= 0)
+            return v[i].first;
+    }
+}
+
+// 区间 n 次方和
+ll sum_of_pow(ll l, ll r, ll x, ll y){
+    ll tot = 0;
+    auto end = split(r + 1);
+    for (auto it = split(l); it != end; it++)
+        tot = (tot + qpow(it->v, x, y) * (it->r - it->l + 1)) % y; // qpow自己写一下
+    return tot;
+}
+```
