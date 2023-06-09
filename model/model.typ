@@ -1,5 +1,6 @@
 #import "../env.typ": *
 
+= 常见模型
 == 单调栈
 
 #explain[

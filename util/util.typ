@@ -55,10 +55,25 @@ ll lcm(ll a, ll b){
 }
 ```
 
-== 二分答案 lower_bound
+== 二分答案
+
+`check(int k)` 函数的意义是 `operator<(int k)`, 即可以做且还可以更大.
+
+如果只是恰好可以不能增大, 那么应该返回 `false`
 
 ```cpp
+int L = 0, R = std::numeric_limits<int>::max();
 
+while(L < R){
+  int mid = L + (R - L + 1) / 2;
+  if(check(mid)) L = mid;
+  else R = mid;
+}
+std::cout << L << "\n";
+```
+
+借助 STL 实现
+```cpp
 #include <algorithm>
 
 bool judge(int x){
